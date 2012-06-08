@@ -47,7 +47,7 @@ public class DrawCamera {
 		// utility function to draw the coordinate axis in a canvas with length 'len'
 		// the x axis is drawn in red, the y axis in green
 		p.setColor(combine(255,0,0));
-		c.drawLine(30f, 100f, len+30, 100f, p);
+		c.drawLine(30f, 100f, 286f, 100f, p);
 		p.setColor(combine(0,255,0));
 		c.drawLine(30f, 0f, 30f, 100f, p);
 		
@@ -70,21 +70,27 @@ public class DrawCamera {
 		// instead of drawing the histogram below we draw the origin, put some text in it
 		// and draw a line.
 		
-		int[] hist = new int[16];
+		//nrBars moet een meervoud zijn van 2 (anders crasht ie)
+		int nrBars = 8;
+		int[] hist = new int[nrBars];
 		int temp = 0;
 		float mean;
 		float median = 0;
 		float standardDeviation = 0;
+		int barwidth = 256/nrBars;
 		
+		//voegt de verschillende bins toe tot de gewenste grootte bins.
 		for (int i = 0; i < 256; i++) {
-			hist[((i & 0xf0) >> 4)] += bins[i];
+			hist[(int)i/(barwidth)] += bins[i];
 		}
 		
+		//berekent het gemiddelde
 		for (int i = 0; i < 256; i++) {
 			temp += (bins[i] * i);
 		}
 		mean = (float)temp/rgb.length;
 		
+		//berekent de mediaan
 		temp = 0;
 		for (int i = 0; i < 256; i++) {
 			temp += bins[i];
@@ -94,6 +100,7 @@ public class DrawCamera {
 			}
 		}
 		
+		//berekent de standaard afwijking
 		temp = 0;
 		for (int i = 0; i < 256; i++) {
 			temp += ((i - mean) * (i - mean) * bins[i]);
@@ -108,8 +115,8 @@ public class DrawCamera {
 		c.drawText("median = "+median, 15, 125, p);
 		c.drawText("mean = "+mean, 15, 140, p);
 		
-		for(int i = 0; i < 16; i++) {
-			drawBin(c, i, hist[i], rgb.length);
+		for(int i = 0; i < nrBars; i++) {
+			drawBin(c, i, hist[i], rgb.length, barwidth);
 		}
 		
 		//c.drawLine(0.0f,0.0f,(float)c.getWidth()-5, c.getHeight(),p);
@@ -219,11 +226,11 @@ public class DrawCamera {
 	}
 	
 	/* tekent een bin van de gegeven grootte en plaats */
-	public void drawBin(Canvas c, int location, float height, int nrPixels) {
+	public void drawBin(Canvas c, int location, float height, int nrPixels, int width) {
 		height = (height/nrPixels) * 100;
 		p.setColor(combine(0,0,0));
-		c.drawLine(35f + (15*location), 100f, 35f + (15*location), 100f - height, p);
-		c.drawLine(50f + (15*location), 100f, 50f + (15*location), 100f - height, p);
-		c.drawLine(35f + (15*location), 100f - height, 50f + (15*location), 100f - height, p);
+		c.drawLine(30f + (width*location), 100f, 30f + (width*location), 100f - height, p);
+		c.drawLine(30f + width + (width*location), 100f, 30f + width + (width*location), 100f - height, p);
+		c.drawLine(30f + (width*location), 100f - height, 30f + width + (width*location), 100f - height, p);
 	}
 }
