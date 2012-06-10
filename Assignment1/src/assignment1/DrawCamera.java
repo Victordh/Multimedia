@@ -125,8 +125,15 @@ public class DrawCamera {
 		c.drawText("median = "+median, 15, 125, p);
 		c.drawText("mean = "+mean, 15, 140, p);
 		
+		int biggestBin = 0;
+		for(int i = 1; i < nrBars; i++) {
+			if (hist[i] > hist[biggestBin]) {
+				biggestBin = i;
+			}
+		}
+		
 		for(int i = 0; i < nrBars; i++) {
-			drawBin(c, i, hist[i], rgb.length, barwidth);
+			drawBin(c, i, hist[i], hist[biggestBin], barwidth);
 		}
 		
 		//c.drawLine(0.0f,0.0f,(float)c.getWidth()-5, c.getHeight(),p);
@@ -140,13 +147,14 @@ public class DrawCamera {
 	 */
 	public void setup(CameraView view) {
 		// Example: add a button to the bottom bar
+		/*
 		view.addButton("Debug Message", new View.OnClickListener() {
 			public void onClick(View arg) {
 				// Using Log, you can print debug messages to Eclipse
 				Log.d("DrawCamera", "Debug message");
 			}
 		});
-		
+		*/
 		// You can add your own buttons here
 		
 	}
