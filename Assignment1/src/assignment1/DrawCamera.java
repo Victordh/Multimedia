@@ -1,11 +1,14 @@
 package assignment1;
 
+import uvamult.assignment1.R;
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.hardware.Camera.Size;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import assignment1.android.CameraView;
 
 public class DrawCamera {
@@ -19,6 +22,7 @@ public class DrawCamera {
 	public int[] bins = new int[256];
 	public Size imageSize;
 	public Paint p;
+	public Activity activity;
 	
 	
 	public void imageReceived(byte[] data) {
@@ -33,12 +37,15 @@ public class DrawCamera {
 		// the histogram should be class member so you can access 
 		// it in other methods of this class.
 		// ....
+		
+		//dit reset de bins array tot nul, omdat hij bewaard blijft tussen de verschillende frames door
 		for(int i = 0; i < bins.length; i++) {
 			bins[i] = 0;
 		}
 		
+		//verdeelt de verschillende groenwaardes in 256 verschillende bins
 		for (int i = 0; i < rgb.length; i++) {
-			int gvalue = r(rgb[i]);
+			int gvalue = g(rgb[i]);
 			bins[gvalue]++;
 		}
 	}
@@ -70,8 +77,11 @@ public class DrawCamera {
 		// instead of drawing the histogram below we draw the origin, put some text in it
 		// and draw a line.
 		
-		//nrBars moet een meervoud zijn van 2 (anders crasht ie)
-		int nrBars = 8;
+		//nrBars moet een macht zijn van 2 (anders crasht ie)
+		
+		SeekBar seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
+		
+		int nrBars = (int)Math.pow(2, seekbar.getProgress());
 		int[] hist = new int[nrBars];
 		int temp = 0;
 		float mean;
@@ -221,8 +231,9 @@ public class DrawCamera {
     }
 
     
-	public DrawCamera() {
+	public DrawCamera(Activity activity) {
 		p = new Paint();
+		this.activity = activity;
 	}
 	
 	/* tekent een bin van de gegeven grootte en plaats */

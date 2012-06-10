@@ -99,7 +99,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
     private void finalInitialize() {
     	
 		// Create our DrawCamera object
-    	drawControl = new DrawCamera();
+    	drawControl = new DrawCamera(activity);
     	drawControl.setup(this);
     	
     	try {
